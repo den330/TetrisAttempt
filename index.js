@@ -29,9 +29,10 @@ setInterval(() => {
     grid[y][x] = 1;
     drawBoard();
   }
-}, 1000);
+}, 800);
 
 function drawBoard() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
   for (let row = 0; row < grid.length; row++) {
     for (let col = 0; col < grid[row].length; col++) {
       const x = col * blockSize;
@@ -39,11 +40,9 @@ function drawBoard() {
       if (grid[row][col] === 1) {
         ctx.fillStyle = "red";
         ctx.fillRect(x, y, blockSize, blockSize);
-      } else {
-        ctx.fillStyle = "white";
-        ctx.fillRect(x, y, blockSize, blockSize);
+        ctx.strokeStyle = "yellow";
+        ctx.strokeRect(x, y, blockSize, blockSize);
       }
-      ctx.strokeRect(x, y, blockSize, blockSize);
     }
   }
 }
