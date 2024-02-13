@@ -9,50 +9,50 @@ class Tetromino {
   y;
   shape;
   constructor(shape) {
-    this.x = (cols / 2 - 1).truncate();
+    this.x = Math.floor(cols / 2) - 1;
     this.y = 0;
     this.shape = shape;
   }
 }
 
 const Tetrominoes = [
-  Tetromino([
+  new Tetromino([
     [0, 0, 1, 0],
     [0, 0, 1, 0],
     [0, 0, 1, 0],
     [0, 0, 1, 0],
   ]),
-  Tetromino([
+  new Tetromino([
     [0, 0, 0, 0],
     [0, 1, 1, 0],
     [0, 1, 1, 0],
     [0, 0, 0, 0],
   ]),
-  Tetromino([
+  new Tetromino([
     [0, 0, 0, 0],
     [0, 1, 0, 0],
     [0, 1, 1, 1],
     [0, 0, 0, 0],
   ]),
-  Tetromino([
+  new Tetromino([
     [0, 0, 0, 0],
     [0, 0, 0, 1],
     [0, 1, 1, 1],
     [0, 0, 0, 0],
   ]),
-  Tetromino([
+  new Tetromino([
     [0, 0, 0, 0],
     [0, 1, 1, 0],
     [0, 0, 1, 1],
     [0, 0, 0, 0],
   ]),
-  Tetromino([
+  new Tetromino([
     [0, 0, 0, 0],
     [0, 0, 1, 1],
     [0, 1, 1, 0],
     [0, 0, 0, 0],
   ]),
-  Tetromino([
+  new Tetromino([
     [0, 0, 0, 0],
     [0, 1, 0, 0],
     [0, 1, 1, 0],
@@ -60,27 +60,38 @@ const Tetrominoes = [
   ]),
 ];
 
-const BoardArray = List.generate(rows, (_) => List.generate(cols, (_) => 0));
+const boardArray = Array.from({ length: rows }, () => Array(cols).fill(0));
 let currentTetromino;
-let nextTeromino = Tetrominoes[Random().nextInt(0, Tetrominoes.length)];
+let nextTeromino = Tetrominoes[Math.floor(Math.random() * Tetrominoes.length)];
 function updateGame() {
   if (currentTetromino == null) {
     currentTetromino = nextTeromino;
-    nextTeromino = Object.assign(
-      {},
-      Tetrominoes[Random().nextInt(0, Tetrominoes.length)]
-    );
+    const shapeIndex = Math.floor(Math.random() * Tetrominoes.length);
+    const shape = Tetrominoes[shapeIndex].shape;
+    nextTeromino = new Tetromino(JSON.parse(JSON.stringify(shape)));
   }
-  if (currentTetromino != null) {
-    currentTetromino.y++;
-  }
-  for (var i = 0; i < rows; i++) {
-    for (var j = 0; j < cols; j++) {
+  let canMoveDown = true;
+  for (var i = 0; i < currentTetromino.shape.length; i++) {
+    for (var j = 0; j < currentTetromino.shape[i].length; j++) {
+      if (currentTetromino.shape[i][j] == 0) continue;
       const realY = i + currentTetromino.y;
-      if (BoardArray[realY][j] == 1 || realY + 1 >= rows) {
+      const realX = j + currentTetromino.x;
+      if (realY + 1 >= rows || boardArray[realY + 1][realX] == 1) {
         currentTetromino = null;
-
+        canMoveDown = false;
         break;
+      }
+    }
+  }
+  if (canMoveDown) {
+    currentTetromino.y++;
+  } else {
+    for (var i = 0; i < currentTetromino.shape.length; i++) {
+      for (var j = 0; j < currentTetromino.shape[i].length; j++) {
+        if (currentTetromino.shape[i][j] == 0) continue;
+        const realY = i + currentTetromino.y;
+        const realX = j + currentTetromino.x;
+        boardArray[realY][realX] = 1;
       }
     }
   }
