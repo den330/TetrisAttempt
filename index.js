@@ -17,45 +17,45 @@ class Tetromino {
 
 const Tetrominoes = [
   new Tetromino([
-    [1, 0, 0, 0],
-    [1, 0, 0, 0],
-    [1, 0, 0, 0],
-    [1, 0, 0, 0],
+    [0, 0, 1, 0],
+    [0, 0, 1, 0],
+    [0, 0, 1, 0],
+    [0, 0, 1, 0],
   ]),
   new Tetromino([
-    [1, 1, 0, 0],
-    [1, 1, 0, 0],
     [0, 0, 0, 0],
-    [0, 0, 0, 0],
-  ]),
-  new Tetromino([
-    [1, 0, 0, 0],
-    [1, 1, 1, 0],
-    [0, 0, 0, 0],
-    [0, 0, 0, 0],
-  ]),
-  new Tetromino([
-    [1, 1, 0, 0],
-    [0, 1, 0, 0],
-    [0, 1, 0, 0],
-    [0, 1, 0, 0],
-  ]),
-  new Tetromino([
-    [1, 1, 0, 0],
+    [0, 1, 1, 0],
     [0, 1, 1, 0],
     [0, 0, 0, 0],
-    [0, 0, 0, 0],
   ]),
   new Tetromino([
-    [1, 0, 0, 0],
-    [1, 1, 0, 0],
+    [0, 0, 0, 0],
     [0, 1, 0, 0],
+    [0, 1, 1, 1],
     [0, 0, 0, 0],
   ]),
   new Tetromino([
+    [0, 0, 0, 0],
+    [0, 0, 1, 0],
     [1, 1, 1, 0],
-    [0, 1, 0, 0],
     [0, 0, 0, 0],
+  ]),
+  new Tetromino([
+    [0, 0, 0, 0],
+    [0, 1, 1, 0],
+    [0, 0, 1, 1],
+    [0, 0, 0, 0],
+  ]),
+  new Tetromino([
+    [0, 1, 0, 0],
+    [0, 1, 1, 0],
+    [0, 0, 1, 0],
+    [0, 0, 0, 0],
+  ]),
+  new Tetromino([
+    [0, 1, 0, 0],
+    [0, 1, 1, 0],
+    [0, 1, 0, 0],
     [0, 0, 0, 0],
   ]),
 ];
@@ -119,6 +119,19 @@ function updateGame() {
         boardArray[realY][realX] = 1;
       }
     }
+    for (var i = 0; i < rows; i++) {
+      let isFull = true; // Assume the row is full initially
+      for (var j = 0; j < cols; j++) {
+        if (boardArray[i][j] == 0) {
+          isFull = false; // Found an empty cell, so the row is not full
+          break;
+        }
+      }
+      if (isFull) {
+        boardArray.splice(i, 1); // Remove the full row
+        boardArray.unshift(Array(cols).fill(0)); // Add a new empty row at the top
+      }
+    }
     currentTetromino = null;
   }
 }
@@ -151,19 +164,98 @@ function draw() {
   }
 }
 
+function checkRight() {
+  for (var i = 0; i < currentTetromino.shape.length; i++) {
+    for (var j = 0; j < currentTetromino.shape[i].length; j++) {
+      if (currentTetromino.shape[i][j] == 0) continue;
+      const realY = i + currentTetromino.y;
+      const realX = j + currentTetromino.x;
+      if (realX + 1 >= cols || boardArray[realY][realX + 1] == 1) {
+        return false;
+      }
+    }
+  }
+  return true;
+}
+
+function checkLeft() {
+  for (var i = 0; i < currentTetromino.shape.length; i++) {
+    for (var j = 0; j < currentTetromino.shape[i].length; j++) {
+      if (currentTetromino.shape[i][j] == 0) continue;
+      const realY = i + currentTetromino.y;
+      const realX = j + currentTetromino.x;
+      if (realX - 1 < 0 || boardArray[realY][realX - 1] == 1) {
+        return false;
+      }
+    }
+  }
+  return true;
+}
+
+function rotation() {
+  const newShape = [];
+  // Transpose and reverse the shape to rotate it
+  for (let i = 0; i < currentTetromino.shape.length; i++) {
+    newShape.push([]);
+    for (let j = 0; j < currentTetromino.shape[i].length; j++) {
+      newShape[i][j] = currentTetromino.shape[j][i];
+    }
+  }
+  newShape.forEach((row) => row.reverse());
+
+  // Try to find a valid position for the new shape
+  const adjustments = [
+    [0, 0],
+    [-1, 0],
+    [1, 0],
+    [0, -1],
+  ]; // Left, Right, Up
+  for (const [dx, dy] of adjustments) {
+    if (isValidPosition(newShape, dx, dy)) {
+      currentTetromino.shape = newShape;
+      currentTetromino.x += dx;
+      currentTetromino.y += dy;
+      return; // Valid position found, applied rotation and adjustments
+    }
+  }
+}
+
+function isValidPosition(newShape, dx, dy) {
+  for (let i = 0; i < newShape.length; i++) {
+    for (let j = 0; j < newShape[i].length; j++) {
+      if (newShape[i][j] === 0) continue; // Skip empty cells
+      const realX = currentTetromino.x + j + dx;
+      const realY = currentTetromino.y + i + dy;
+      if (
+        realX < 0 ||
+        realX >= cols ||
+        realY < 0 ||
+        realY >= rows ||
+        boardArray[realY][realX] === 1
+      ) {
+        return false; // Position is not valid
+      }
+    }
+  }
+  return true; // Position is valid
+}
+
 let updateGameInterval;
 
 let drawInterval;
 
 let handleKeyDown = function (event) {
-  if (event.key === "ArrowRight") {
+  if (event.key === "ArrowRight" && checkRight()) {
     currentTetromino.x++;
   }
-  if (event.key === "ArrowLeft") {
+  if (event.key === "ArrowLeft" && checkLeft()) {
     currentTetromino.x--;
   }
   if (event.key == "ArrowDown") {
     updateGame();
+  }
+  if (event.key == "ArrowUp") {
+    rotation();
   }
 };
 
