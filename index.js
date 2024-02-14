@@ -97,6 +97,13 @@ function updateGame() {
   }
 }
 
-settimeinterval(() => {
-  updateGame();
-}, 1000);
+function draw() {}
+
+function startGame() {
+  settimeinterval(() => {
+    updateGame();
+  }, 1000);
+  settimeinterval(() => {
+    draw();
+  }, 100);
+}
