@@ -1,6 +1,6 @@
 const canvasHeight = 600;
-const canvasWidth = 300;
-const cellSize = 30;
+const canvasWidth = 400;
+const cellSize = 40;
 const rows = canvasHeight / cellSize;
 const cols = canvasWidth / cellSize;
 
@@ -61,6 +61,10 @@ const Tetrominoes = [
 ];
 
 const boardArray = Array.from({ length: rows }, () => Array(cols).fill(0));
+const canvas = document.getElementById("myCanvas");
+const nextShapeCanvas = document.getElementById("nextShapeCanvas");
+const nextShapeCanvasCtx = nextShapeCanvas.getContext("2d");
+const ctx = canvas.getContext("2d");
 let currentTetromino;
 let nextTeromino = Tetrominoes[Math.floor(Math.random() * Tetrominoes.length)];
 function updateGame() {
@@ -69,6 +73,24 @@ function updateGame() {
     const shapeIndex = Math.floor(Math.random() * Tetrominoes.length);
     const shape = Tetrominoes[shapeIndex].shape;
     nextTeromino = new Tetromino(JSON.parse(JSON.stringify(shape)));
+    nextShapeCanvasCtx.clearRect(
+      0,
+      0,
+      nextShapeCanvas.width,
+      nextShapeCanvas.height
+    );
+    nextShapeCanvasCtx.fillStyle = "blue";
+    for (var i = 0; i < shape.length; i++) {
+      for (var j = 0; j < shape[i].length; j++) {
+        if (shape[i][j] == 0) continue;
+        nextShapeCanvasCtx.fillRect(
+          j * cellSize,
+          i * cellSize,
+          cellSize,
+          cellSize
+        );
+      }
+    }
   }
   let canMoveDown = true;
   for (var i = 0; i < currentTetromino.shape.length; i++) {
@@ -77,33 +99,93 @@ function updateGame() {
       const realY = i + currentTetromino.y;
       const realX = j + currentTetromino.x;
       if (realY + 1 >= rows || boardArray[realY + 1][realX] == 1) {
-        currentTetromino = null;
         canMoveDown = false;
         break;
       }
+    }
+    if (canMoveDown == false) {
+      break;
     }
   }
   if (canMoveDown) {
     currentTetromino.y++;
   } else {
+    let shouldEndGame = false;
     for (var i = 0; i < currentTetromino.shape.length; i++) {
       for (var j = 0; j < currentTetromino.shape[i].length; j++) {
         if (currentTetromino.shape[i][j] == 0) continue;
         const realY = i + currentTetromino.y;
         const realX = j + currentTetromino.x;
         boardArray[realY][realX] = 1;
+        if (currentTetromino.y <= 0) {
+          shouldEndGame = true;
+        }
+      }
+    }
+    if (shouldEndGame) {
+      endGame();
+    }
+    currentTetromino = null;
+  }
+}
+
+function draw() {
+  ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+  for (var i = 0; i < rows; i++) {
+    for (var j = 0; j < cols; j++) {
+      if (boardArray[i][j] == 1) {
+        ctx.fillStyle = "red";
+        ctx.border = "1px solid black";
+        ctx.strokeRect(j * cellSize, i * cellSize, cellSize, cellSize);
+        ctx.fillRect(j * cellSize, i * cellSize, cellSize, cellSize);
+      }
+    }
+  }
+  if (currentTetromino != null) {
+    for (var i = 0; i < currentTetromino.shape.length; i++) {
+      for (var j = 0; j < currentTetromino.shape[i].length; j++) {
+        if (currentTetromino.shape[i][j] == 0) continue;
+        ctx.fillStyle = "blue";
+        ctx.fillRect(
+          (j + currentTetromino.x) * cellSize,
+          (i + currentTetromino.y) * cellSize,
+          cellSize,
+          cellSize
+        );
       }
     }
   }
 }
 
-function draw() {}
+let updateGameInterval;
+
+let drawInterval;
 
 function startGame() {
-  settimeinterval(() => {
+  updateGameInterval = setInterval(() => {
     updateGame();
   }, 1000);
-  settimeinterval(() => {
+  drawInterval = setInterval(() => {
     draw();
   }, 100);
+  document.addEventListener("keydown", function (event) {
+    if (event.key === "ArrowRight") {
+      currentTetromino.x++;
+    }
+    if (event.key === "ArrowLeft") {
+      currentTetromino.x--;
+    }
+    if (event.key == "ArrowDown") {
+      updateGame();
+    }
+  });
 }
+
+function endGame() {
+  clearInterval(updateGameInterval);
+  clearInterval(drawInterval);
+  document.removeEventListener("keydown", function (event) {});
+  alert("Game Over");
+}
+
+startGame();
