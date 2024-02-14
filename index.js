@@ -17,46 +17,46 @@ class Tetromino {
 
 const Tetrominoes = [
   new Tetromino([
-    [0, 0, 1, 0],
-    [0, 0, 1, 0],
-    [0, 0, 1, 0],
-    [0, 0, 1, 0],
+    [1, 0, 0, 0],
+    [1, 0, 0, 0],
+    [1, 0, 0, 0],
+    [1, 0, 0, 0],
   ]),
   new Tetromino([
+    [1, 1, 0, 0],
+    [1, 1, 0, 0],
     [0, 0, 0, 0],
-    [0, 1, 1, 0],
-    [0, 1, 1, 0],
     [0, 0, 0, 0],
   ]),
   new Tetromino([
+    [1, 0, 0, 0],
+    [1, 1, 1, 0],
     [0, 0, 0, 0],
+    [0, 0, 0, 0],
+  ]),
+  new Tetromino([
+    [1, 1, 0, 0],
     [0, 1, 0, 0],
-    [0, 1, 1, 1],
-    [0, 0, 0, 0],
-  ]),
-  new Tetromino([
-    [0, 0, 0, 0],
-    [0, 0, 0, 1],
-    [0, 1, 1, 1],
-    [0, 0, 0, 0],
-  ]),
-  new Tetromino([
-    [0, 0, 0, 0],
-    [0, 1, 1, 0],
-    [0, 0, 1, 1],
-    [0, 0, 0, 0],
-  ]),
-  new Tetromino([
-    [0, 0, 0, 0],
-    [0, 0, 1, 1],
-    [0, 1, 1, 0],
-    [0, 0, 0, 0],
-  ]),
-  new Tetromino([
-    [0, 0, 0, 0],
     [0, 1, 0, 0],
-    [0, 1, 1, 0],
     [0, 1, 0, 0],
+  ]),
+  new Tetromino([
+    [1, 1, 0, 0],
+    [0, 1, 1, 0],
+    [0, 0, 0, 0],
+    [0, 0, 0, 0],
+  ]),
+  new Tetromino([
+    [1, 0, 0, 0],
+    [1, 1, 0, 0],
+    [0, 1, 0, 0],
+    [0, 0, 0, 0],
+  ]),
+  new Tetromino([
+    [1, 1, 1, 0],
+    [0, 1, 0, 0],
+    [0, 0, 0, 0],
+    [0, 0, 0, 0],
   ]),
 ];
 
@@ -70,6 +70,7 @@ let nextTeromino = Tetrominoes[Math.floor(Math.random() * Tetrominoes.length)];
 function updateGame() {
   if (currentTetromino == null) {
     currentTetromino = nextTeromino;
+
     const shapeIndex = Math.floor(Math.random() * Tetrominoes.length);
     const shape = Tetrominoes[shapeIndex].shape;
     nextTeromino = new Tetromino(JSON.parse(JSON.stringify(shape)));
@@ -98,32 +99,25 @@ function updateGame() {
       if (currentTetromino.shape[i][j] == 0) continue;
       const realY = i + currentTetromino.y;
       const realX = j + currentTetromino.x;
+      if (boardArray[realY][realX] == 1) {
+        endGame();
+        return;
+      }
       if (realY + 1 >= rows || boardArray[realY + 1][realX] == 1) {
         canMoveDown = false;
-        break;
       }
-    }
-    if (canMoveDown == false) {
-      break;
     }
   }
   if (canMoveDown) {
     currentTetromino.y++;
   } else {
-    let shouldEndGame = false;
     for (var i = 0; i < currentTetromino.shape.length; i++) {
       for (var j = 0; j < currentTetromino.shape[i].length; j++) {
         if (currentTetromino.shape[i][j] == 0) continue;
         const realY = i + currentTetromino.y;
         const realX = j + currentTetromino.x;
         boardArray[realY][realX] = 1;
-        if (currentTetromino.y <= 0) {
-          shouldEndGame = true;
-        }
       }
-    }
-    if (shouldEndGame) {
-      endGame();
     }
     currentTetromino = null;
   }
@@ -161,30 +155,33 @@ let updateGameInterval;
 
 let drawInterval;
 
+let handleKeyDown = function (event) {
+  if (event.key === "ArrowRight") {
+    currentTetromino.x++;
+  }
+  if (event.key === "ArrowLeft") {
+    currentTetromino.x--;
+  }
+  if (event.key == "ArrowDown") {
+    updateGame();
+  }
+};
+
 function startGame() {
+  isGameOver = false;
   updateGameInterval = setInterval(() => {
     updateGame();
   }, 1000);
   drawInterval = setInterval(() => {
     draw();
   }, 100);
-  document.addEventListener("keydown", function (event) {
-    if (event.key === "ArrowRight") {
-      currentTetromino.x++;
-    }
-    if (event.key === "ArrowLeft") {
-      currentTetromino.x--;
-    }
-    if (event.key == "ArrowDown") {
-      updateGame();
-    }
-  });
+  document.addEventListener("keydown", handleKeyDown);
 }
 
 function endGame() {
   clearInterval(updateGameInterval);
   clearInterval(drawInterval);
-  document.removeEventListener("keydown", function (event) {});
+  document.removeEventListener("keydown", handleKeyDown);
   alert("Game Over");
 }
 
