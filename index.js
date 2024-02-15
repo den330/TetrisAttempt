@@ -1,5 +1,5 @@
-const canvasHeight = 600;
-const canvasWidth = 400;
+const canvasHeight = 800;
+const canvasWidth = 600;
 const cellSize = 40;
 const rows = canvasHeight / cellSize;
 const cols = canvasWidth / cellSize;
@@ -274,7 +274,8 @@ let handleKeyDown = function (event) {
 
 const title = document.getElementById("title");
 const startbutton = document.getElementById("startButton");
-
+const framePerSecond = 24;
+const gameSpeed = 5;
 function startGame() {
   if (!isGameOver) return;
   currentScore = 0;
@@ -284,10 +285,10 @@ function startGame() {
   currentTetromino = null;
   updateGameInterval = setInterval(() => {
     updateGame();
-  }, 1000);
+  }, 1000 / gameSpeed);
   drawInterval = setInterval(() => {
     draw();
-  }, 100);
+  }, 1000 / framePerSecond);
   document.addEventListener("keydown", handleKeyDown);
   title.innerText = "Tetris";
   startbutton.innerText = "Restart Game";

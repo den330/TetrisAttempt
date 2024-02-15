@@ -1,12 +1,11 @@
 .gameContainer {
   display: grid;
-  grid-template-columns: 1fr 1fr; /* Two columns of equal width */
+  grid-template-columns: auto auto; /* Two columns of equal width */
   grid-template-rows: auto auto; /* Two rows, height determined by content */
   gap: 10px; /* Optional: Adds some space between grid items */
-  margin: auto;
   position: absolute;
   left: 50%;
-  top: 20%;
+  top: 10%;
   transform: translate(-50%, 0);
 }
 
