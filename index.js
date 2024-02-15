@@ -3,6 +3,7 @@ const canvasWidth = 600;
 const cellSize = 40;
 const rows = canvasHeight / cellSize;
 const cols = canvasWidth / cellSize;
+let pauseBtn = document.getElementById("pauseBtn");
 
 class Tetromino {
   x;
@@ -292,6 +293,7 @@ function startGame() {
   document.addEventListener("keydown", handleKeyDown);
   title.innerText = "Tetris";
   startbutton.innerText = "Restart Game";
+  pauseBtn.classList.remove("hidden"); // Show the pause button when the game starts
 }
 
 function endGame() {
@@ -301,6 +303,7 @@ function endGame() {
   isGameOver = true;
   title.innerText = "Game Over";
   startbutton.innerText = "Start Game";
+  pauseBtn.classList.add("hidden"); // Show the pause button when the game starts
 }
 
 function restartGame() {
@@ -317,3 +320,37 @@ function handleGame() {
 }
 
 startbutton.addEventListener("click", handleGame);
+
+let isPaused = false; // Flag to track pause state
+
+// Function to toggle pause state
+function togglePause() {
+  if (isGameOver) return; // Don't pause if the game is over
+
+  isPaused = !isPaused; // Toggle pause state
+  pauseBtn.innerText = isPaused ? "Resume" : "Pause"; // Update button text
+
+  if (isPaused) {
+    // If pausing, stop the game logic and drawing updates
+    clearInterval(updateGameInterval);
+    clearInterval(drawInterval);
+    document.removeEventListener("keydown", handleKeyDown); // Prevent moving pieces while paused
+    title.innerText = "Game Paused"; // Optional: Update title or show a pause message
+  } else {
+    // If resuming, restart the game logic and drawing updates
+    updateGameInterval = setInterval(() => {
+      updateGame();
+    }, 1000 / gameSpeed);
+    drawInterval = setInterval(() => {
+      draw();
+    }, 1000 / framePerSecond);
+    document.addEventListener("keydown", handleKeyDown); // Re-enable key controls
+    title.innerText = "Tetris"; // Optional: Reset title or hide pause message
+  }
+}
+
+// Add event listener to the pause button
+pauseBtn.addEventListener("click", togglePause);
+document.addEventListener("DOMContentLoaded", function () {
+  pauseBtn.classList.add("hidden");
+});
