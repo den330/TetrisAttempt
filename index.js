@@ -275,7 +275,7 @@ let handleKeyDown = function (event) {
 const title = document.getElementById("title");
 const startbutton = document.getElementById("startButton");
 const framePerSecond = 24;
-const gameSpeed = 5;
+const gameSpeed = 4;
 function startGame() {
   if (!isGameOver) return;
   currentScore = 0;
