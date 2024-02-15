@@ -4,6 +4,8 @@ const cellSize = 40;
 const rows = canvasHeight / cellSize;
 const cols = canvasWidth / cellSize;
 let pauseBtn = document.getElementById("pauseBtn");
+let gameSpeedLabel = document.getElementById("speedLabel");
+const speedIncreaseInterval = 120000;
 
 class Tetromino {
   x;
@@ -256,6 +258,8 @@ let updateGameInterval;
 
 let drawInterval;
 
+let speedInterval;
+
 let handleKeyDown = function (event) {
   if (event.key === "ArrowRight" && checkRight()) {
     currentTetromino.x++;
@@ -276,11 +280,13 @@ let handleKeyDown = function (event) {
 const title = document.getElementById("title");
 const startbutton = document.getElementById("startButton");
 const framePerSecond = 24;
-const gameSpeed = 4;
+let gameSpeed;
 function startGame() {
   if (!isGameOver) return;
   currentScore = 0;
   score.innerText = currentScore;
+  gameSpeed = 4;
+  gameSpeedLabel.innerText = gameSpeed;
   isGameOver = false;
   boardArray = Array.from({ length: rows }, () => Array(cols).fill(0));
   currentTetromino = null;
@@ -290,6 +296,7 @@ function startGame() {
   drawInterval = setInterval(() => {
     draw();
   }, 1000 / framePerSecond);
+  speedInterval = setInterval(increaseGameSpeed, speedIncreaseInterval);
   document.addEventListener("keydown", handleKeyDown);
   title.innerText = "Tetris";
   startbutton.innerText = "Restart Game";
@@ -299,6 +306,7 @@ function startGame() {
 function endGame() {
   clearInterval(updateGameInterval);
   clearInterval(drawInterval);
+  clearInterval(speedInterval);
   document.removeEventListener("keydown", handleKeyDown);
   isGameOver = true;
   title.innerText = "Game Over";
@@ -347,6 +355,17 @@ function togglePause() {
     document.addEventListener("keydown", handleKeyDown); // Re-enable key controls
     title.innerText = "Tetris"; // Optional: Reset title or hide pause message
   }
+}
+
+function increaseGameSpeed() {
+  if (isGameOver || isPaused || gameSpeed >= 12) return; // Do not increase speed if the game is over or paused
+
+  gameSpeed += 1; // Increase game speed by 1
+  gameSpeedLabel.innerText = gameSpeed; // Update the game speed label
+
+  // Restart the game loop intervals with the new speed
+  clearInterval(updateGameInterval);
+  updateGameInterval = setInterval(updateGame, 1000 / gameSpeed);
 }
 
 // Add event listener to the pause button
