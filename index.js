@@ -283,6 +283,8 @@ const framePerSecond = 24;
 let gameSpeed;
 function startGame() {
   if (!isGameOver) return;
+  isPaused = false;
+  pauseBtn.innerText = "Pause";
   currentScore = 0;
   score.innerText = currentScore;
   gameSpeed = 4;
