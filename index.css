@@ -11,7 +11,9 @@
 }
 
 #myCanvas {
-  border-style: dotted;
+  background-color: #2b2f77; /* Sets the background color of the canvas */
+  border: 4px solid #fff; /* Adds a solid white border around the canvas */
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.5); /* Adds a subtle glow effect to make the canvas stand out */
 }
 
 .boardContainer {
@@ -43,7 +45,9 @@ button:hover {
 }
 
 #nextShapeCanvas {
-  border-style: groove;
+  background-color: #f0e68c; /* A light khaki background for soft contrast */
+  border: 2px solid #ffd700; /* Gold border to match the main canvas style */
+  box-shadow: 0 0 8px rgba(255, 215, 0, 0.5); /* Softer glow effect for coherence */
 }
 
 h3 {
@@ -54,4 +58,25 @@ h3 {
 
 h1 {
   text-align: center;
+}
+
+@keyframes backgroundAnimation {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+body {
+  background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+  background-size: 400% 400%;
+  animation: backgroundAnimation 15s ease infinite;
+  color: #ffffff;
+  font-family: "Pixel", Arial, sans-serif;
+  height: 100vh;
 }

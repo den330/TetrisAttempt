@@ -85,7 +85,7 @@ function updateGame() {
       nextShapeCanvas.width,
       nextShapeCanvas.height
     );
-    nextShapeCanvasCtx.fillStyle = "blue";
+    nextShapeCanvasCtx.fillStyle = "#FFA500";
     for (var i = 0; i < shape.length; i++) {
       for (var j = 0; j < shape[i].length; j++) {
         if (shape[i][j] == 0) continue;
@@ -152,7 +152,7 @@ function draw() {
   for (var i = 0; i < rows; i++) {
     for (var j = 0; j < cols; j++) {
       if (boardArray[i][j] == 1) {
-        ctx.fillStyle = "red";
+        ctx.fillStyle = "#00FFFF";
         ctx.border = "1px solid black";
         ctx.strokeRect(j * cellSize, i * cellSize, cellSize, cellSize);
         ctx.fillRect(j * cellSize, i * cellSize, cellSize, cellSize);
@@ -163,7 +163,7 @@ function draw() {
     for (var i = 0; i < currentTetromino.shape.length; i++) {
       for (var j = 0; j < currentTetromino.shape[i].length; j++) {
         if (currentTetromino.shape[i][j] == 0) continue;
-        ctx.fillStyle = "blue";
+        ctx.fillStyle = "#98FB98";
         ctx.fillRect(
           (j + currentTetromino.x) * cellSize,
           (i + currentTetromino.y) * cellSize,
@@ -263,9 +263,11 @@ let handleKeyDown = function (event) {
     currentTetromino.x--;
   }
   if (event.key == "ArrowDown") {
+    event.preventDefault();
     updateGame();
   }
   if (event.key == "ArrowUp") {
+    event.preventDefault();
     rotation();
   }
 };
