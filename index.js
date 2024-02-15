@@ -5,7 +5,7 @@ const rows = canvasHeight / cellSize;
 const cols = canvasWidth / cellSize;
 let pauseBtn = document.getElementById("pauseBtn");
 let gameSpeedLabel = document.getElementById("speedLabel");
-const speedIncreaseInterval = 120000;
+const speedIncreaseInterval = 60000;
 
 class Tetromino {
   x;
@@ -287,7 +287,7 @@ function startGame() {
   pauseBtn.innerText = "Pause";
   currentScore = 0;
   score.innerText = currentScore;
-  gameSpeed = 4;
+  gameSpeed = 1;
   gameSpeedLabel.innerText = gameSpeed;
   isGameOver = false;
   boardArray = Array.from({ length: rows }, () => Array(cols).fill(0));
