@@ -60,13 +60,18 @@ const Tetrominoes = [
   ]),
 ];
 
-const boardArray = Array.from({ length: rows }, () => Array(cols).fill(0));
+let boardArray;
 const canvas = document.getElementById("myCanvas");
 const nextShapeCanvas = document.getElementById("nextShapeCanvas");
 const nextShapeCanvasCtx = nextShapeCanvas.getContext("2d");
 const ctx = canvas.getContext("2d");
+let currentHighScore = 0;
+let currentScore = 0;
+let isGameOver = true;
 let currentTetromino;
 let nextTeromino = Tetrominoes[Math.floor(Math.random() * Tetrominoes.length)];
+const score = document.getElementById("score");
+const highScore = document.getElementById("highScore");
 function updateGame() {
   if (currentTetromino == null) {
     currentTetromino = nextTeromino;
@@ -119,6 +124,7 @@ function updateGame() {
         boardArray[realY][realX] = 1;
       }
     }
+    let count = 0;
     for (var i = 0; i < rows; i++) {
       let isFull = true; // Assume the row is full initially
       for (var j = 0; j < cols; j++) {
@@ -130,8 +136,13 @@ function updateGame() {
       if (isFull) {
         boardArray.splice(i, 1); // Remove the full row
         boardArray.unshift(Array(cols).fill(0)); // Add a new empty row at the top
+        count += 1;
       }
     }
+    currentScore = 10 * count * count + currentScore;
+    score.innerText = currentScore;
+    currentHighScore = Math.max(currentHighScore, currentScore);
+    highScore.innerText = currentHighScore;
     currentTetromino = null;
   }
 }
@@ -259,8 +270,16 @@ let handleKeyDown = function (event) {
   }
 };
 
+const title = document.getElementById("title");
+const startbutton = document.getElementById("startButton");
+
 function startGame() {
+  if (!isGameOver) return;
+  currentScore = 0;
+  score.innerText = currentScore;
   isGameOver = false;
+  boardArray = Array.from({ length: rows }, () => Array(cols).fill(0));
+  currentTetromino = null;
   updateGameInterval = setInterval(() => {
     updateGame();
   }, 1000);
@@ -268,13 +287,30 @@ function startGame() {
     draw();
   }, 100);
   document.addEventListener("keydown", handleKeyDown);
+  title.innerText = "Tetris";
+  startbutton.innerText = "Restart Game";
 }
 
 function endGame() {
   clearInterval(updateGameInterval);
   clearInterval(drawInterval);
   document.removeEventListener("keydown", handleKeyDown);
-  alert("Game Over");
+  isGameOver = true;
+  title.innerText = "Game Over";
+  startbutton.innerText = "Start Game";
 }
 
-startGame();
+function restartGame() {
+  endGame();
+  startGame();
+}
+
+function handleGame() {
+  if (isGameOver) {
+    startGame();
+  } else {
+    restartGame();
+  }
+}
+
+startbutton.addEventListener("click", handleGame);

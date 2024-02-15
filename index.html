@@ -5,9 +5,23 @@
     <link rel="stylesheet" type="text/css" href="index.css" />
   </head>
   <body>
-    <h1>Welcome to my first webpage!</h1>
-    <canvas id="myCanvas" width="400" height="600"></canvas>
-    <canvas id="nextShapeCanvas" width="200" height="200"></canvas>
+    <h1 id="title">Tetris</h1>
+    <div class="gameContainer">
+      <div class="boardContainer">
+        <canvas id="myCanvas" width="400" height="600"></canvas>
+        <button id="startButton">Start Game</button>
+      </div>
+      <div class="nextContainer">
+        <h2>Next Shape</h2>
+        <canvas id="nextShapeCanvas" width="200" height="200"></canvas>
+      </div>
+      <div class="scoreContainer">
+        <h2>Score</h2>
+        <h3 id="score">0</h3>
+        <br />
+        <h2> High Score</h2>
+        <h3 id="highScore">0</h3>
+      </div>
     <script src="index.js"></script>
   </body>
 </html>
