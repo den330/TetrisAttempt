@@ -79,10 +79,6 @@ h3 {
   display: block;
 }
 
-h1 {
-  text-align: center;
-}
-
 @keyframes backgroundAnimation {
   0% {
     background-position: 0% 50%;
@@ -102,4 +98,29 @@ body {
   color: #ffffff;
   font-family: "Pixel", Arial, sans-serif;
   height: 100vh;
+}
+
+#title {
+  font-family: "Press Start 2P", cursive; /* Retro-style font for a classic game look */
+  color: #ffffff; /* White for high contrast */
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000,
+    1px 1px 0 #000; /* Black shadow for legibility */
+  text-align: center; /* Center-align the title */
+  padding: 20px; /* Add some padding around the text */
+  background: rgba(
+    0,
+    0,
+    0,
+    0.5
+  ); /* Semi-transparent black background to enhance legibility */
+  display: inline-block; /* Only take up as much space as needed */
+  margin-top: 20px;
+  margin-bottom: 20px;
+  user-select: none; /* Prevent text selection */
+  border-radius: 10px; /* Rounded corners for a softer look */
+}
+
+.titleContainer {
+  text-align: center; /* Centers inline or inline-block elements within it */
+  width: 100%; /* Ensures the container spans the full width */
 }
