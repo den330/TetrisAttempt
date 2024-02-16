@@ -31,6 +31,11 @@
         <h3 id="highScore">0</h3>
       </div>
     </div>
-    <script src="index.min.js"></script>
+    <script>
+      const isProd = "%%CURRENT_ENV%%" === "prod";
+      var script = document.createElement("script");
+      script.src = isProd ? "index.min.js" : "index.js";
+      document.head.appendChild(script);
+    </script>
   </body>
 </html>
