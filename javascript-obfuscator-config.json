@@ -1,10 +1,15 @@
 {
   "compact": true,
   "controlFlowFlattening": true,
-  "controlFlowFlatteningThreshold": 0.75,
+  "controlFlowFlatteningThreshold": 0.9,
   "deadCodeInjection": true,
-  "deadCodeInjectionThreshold": 0.4,
+  "deadCodeInjectionThreshold": 0.7,
   "stringArray": true,
-  "stringArrayEncoding": ["base64"],
-  "rotateStringArray": true
+  "stringArrayEncoding": ["base64", "rc4"],
+  "rotateStringArray": true,
+  "selfDefending": true,
+  "disableConsoleOutput": true,
+  "domainLock": ["d2qr5zamkr876y.amplifyapp.com"],
+  "transformObjectKeys": true,
+  "renameGlobals": false
 }
