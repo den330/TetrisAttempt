@@ -10,5 +10,6 @@
   "selfDefending": true,
   "disableConsoleOutput": true,
   "transformObjectKeys": true,
-  "renameGlobals": false
+  "renameGlobals": false,
+  "domainLock": ["main.d2qr5zamkr876y.amplifyapp.com"]
 }
