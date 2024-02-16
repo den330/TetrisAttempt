@@ -1,5 +1,6 @@
-const canvasHeight = 800;
-const canvasWidth = 600;
+const canvas = document.getElementById("myCanvas");
+const canvasHeight = canvas.height;
+const canvasWidth = canvas.width;
 const cellSize = 40;
 const rows = canvasHeight / cellSize;
 const cols = canvasWidth / cellSize;
@@ -64,7 +65,6 @@ const Tetrominoes = [
 ];
 
 let boardArray;
-const canvas = document.getElementById("myCanvas");
 const nextShapeCanvas = document.getElementById("nextShapeCanvas");
 const nextShapeCanvasCtx = nextShapeCanvas.getContext("2d");
 const ctx = canvas.getContext("2d");
