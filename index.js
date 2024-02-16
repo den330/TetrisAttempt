@@ -75,31 +75,36 @@ let currentTetromino;
 let nextTeromino = Tetrominoes[Math.floor(Math.random() * Tetrominoes.length)];
 const score = document.getElementById("score");
 const highScore = document.getElementById("highScore");
+
+function getNext() {
+  const shapeIndex = Math.floor(Math.random() * Tetrominoes.length);
+  const shape = Tetrominoes[shapeIndex].shape;
+  nextTeromino = new Tetromino(JSON.parse(JSON.stringify(shape)));
+  nextShapeCanvasCtx.clearRect(
+    0,
+    0,
+    nextShapeCanvas.width,
+    nextShapeCanvas.height
+  );
+  nextShapeCanvasCtx.fillStyle = "#FFA500";
+  for (var i = 0; i < shape.length; i++) {
+    for (var j = 0; j < shape[i].length; j++) {
+      if (shape[i][j] == 0) continue;
+      nextShapeCanvasCtx.fillRect(
+        j * cellSize,
+        i * cellSize,
+        cellSize,
+        cellSize
+      );
+    }
+  }
+  return nextTeromino;
+}
+
 function updateGame() {
   if (currentTetromino == null) {
     currentTetromino = nextTeromino;
-
-    const shapeIndex = Math.floor(Math.random() * Tetrominoes.length);
-    const shape = Tetrominoes[shapeIndex].shape;
-    nextTeromino = new Tetromino(JSON.parse(JSON.stringify(shape)));
-    nextShapeCanvasCtx.clearRect(
-      0,
-      0,
-      nextShapeCanvas.width,
-      nextShapeCanvas.height
-    );
-    nextShapeCanvasCtx.fillStyle = "#FFA500";
-    for (var i = 0; i < shape.length; i++) {
-      for (var j = 0; j < shape[i].length; j++) {
-        if (shape[i][j] == 0) continue;
-        nextShapeCanvasCtx.fillRect(
-          j * cellSize,
-          i * cellSize,
-          cellSize,
-          cellSize
-        );
-      }
-    }
+    nextTeromino = getNext();
   }
   let canMoveDown = true;
   for (var i = 0; i < currentTetromino.shape.length; i++) {
@@ -146,7 +151,8 @@ function updateGame() {
     score.innerText = currentScore;
     currentHighScore = Math.max(currentHighScore, currentScore);
     highScore.innerText = currentHighScore;
-    currentTetromino = null;
+    currentTetromino = nextTeromino;
+    nextTeromino = getNext();
   }
 }
 
@@ -261,6 +267,7 @@ let drawInterval;
 let speedInterval;
 
 let handleKeyDown = function (event) {
+  // if (currentTetromino == null) return;
   if (event.key === "ArrowRight" && checkRight()) {
     currentTetromino.x++;
   }
