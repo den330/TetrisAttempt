@@ -142,7 +142,7 @@ function updateGame() {
         count += 1;
       }
     }
-    currentScore = 10 * count * count + currentScore;
+    currentScore = 10 * count * count * gameSpeed + currentScore;
     score.innerText = currentScore;
     currentHighScore = Math.max(currentHighScore, currentScore);
     highScore.innerText = currentHighScore;
