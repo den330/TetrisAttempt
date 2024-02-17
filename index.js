@@ -1,7 +1,7 @@
 const canvas = document.getElementById("myCanvas");
 const canvasHeight = canvas.height;
 const canvasWidth = canvas.width;
-const cellSize = 40;
+const cellSize = 20;
 const rows = canvasHeight / cellSize;
 const cols = canvasWidth / cellSize;
 let pauseBtn = document.getElementById("pauseBtn");
