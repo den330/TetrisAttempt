@@ -229,6 +229,8 @@ function rotation() {
     [-1, 0],
     [1, 0],
     [0, -1],
+    [-2, 0],
+    [2, 0],
   ]; // Left, Right, Up
   for (const [dx, dy] of adjustments) {
     if (isValidPosition(newShape, dx, dy)) {
