@@ -106,7 +106,7 @@ body {
   text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000,
     1px 1px 0 #000; /* Black shadow for legibility */
   text-align: center; /* Center-align the title */
-  padding: 20px; /* Add some padding around the text */
+  padding: 5px;
   background: rgba(
     0,
     0,
@@ -114,10 +114,10 @@ body {
     0.5
   ); /* Semi-transparent black background to enhance legibility */
   display: inline-block; /* Only take up as much space as needed */
-  margin-top: 20px;
-  margin-bottom: 20px;
+  margin-top: 10px;
   user-select: none; /* Prevent text selection */
   border-radius: 10px; /* Rounded corners for a softer look */
+  font-size: 30px;
 }
 
 .titleContainer {
